@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎使用爱心捐赠系统</title>
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/semantic-ui/semantic.css">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/semantic-ui/semantic.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<style type="text/css">
+    .hidden.menu {
+        display: none;
+    }
+    .masthead.segment {
+        min-height: 700px;
+        padding: 1em 0em;
+    }
+    .masthead .logo.item img {
+        margin-right: 1em;
+    }
+    .masthead .ui.menu .ui.button {
+        margin-left: 0.5em;
+    }
+    .masthead h1.ui.header {
+        margin-top: 3em;
+        margin-bottom: 0em;
+        font-size: 4em;
+        font-weight: normal;
+    }
+    .masthead h2 {
+        font-size: 1.7em;
+        font-weight: normal;
+    }
+    .ui.vertical.stripe {
+        padding: 8em 0em;
+    }
+    .ui.vertical.stripe h3 {
+        font-size: 2em;
+    }
+    .ui.vertical.stripe .button + h3,
+    .ui.vertical.stripe p + h3 {
+        margin-top: 3em;
+    }
+    .ui.vertical.stripe .floated.image {
+        clear: both;
+    }
+    .ui.vertical.stripe p {
+        font-size: 1.33em;
+    }
+    .ui.vertical.stripe .horizontal.divider {
+        margin: 3em 0em;
+    }
+
+    .quote.stripe.segment {
+        padding: 0em;
+    }
+    .quote.stripe.segment .grid .column {
+        padding-top: 5em;
+        padding-bottom: 5em;
+    }
+
+    .footer.segment {
+        padding: 5em 0em;
+    }
+    .secondary.pointing.menu .toc.item {
+        display: none;
+    }
+    @media only screen and (max-width: 700px) {
+        .ui.fixed.menu {
+            display: none !important;
+        }
+        .secondary.pointing.menu .item,
+        .secondary.pointing.menu .menu {
+            display: none;
+        }
+        .secondary.pointing.menu .toc.item {
+            display: block;
+        }
+        .masthead.segment {
+            min-height: 350px;
+        }
+        .masthead h1.ui.header {
+            font-size: 2em;
+            margin-top: 1.5em;
+        }
+        .masthead h2 {
+            margin-top: 0.5em;
+            font-size: 1.5em;
+        }
+    }
+    .ui.text.container {
+        font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        max-width: 100% !important;
+        line-height: 1.5;
+    }
+    .overThreeLineText{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        /*超出3行部分显示省略号，去掉该属性 显示全部*/
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        $('.masthead')
+            .visibility({
+                once: false,
+                onBottomPassed: function() {
+                    $('.fixed.menu').transition('fade in');
+                },
+                onBottomPassedReverse: function() {
+                    $('.fixed.menu').transition('fade out');
+                }
+            });
+        $('.ui.sidebar')
+            .sidebar('attach events', '.toc.item');
+    });
+</script>
+
+<body class="pushable">
+
+<div class="ui large top fixed hidden menu">
+    <div class="ui container">
+        <a class="item" href="/page/indexPage"><i class="home icon"></i>首页</a>
+        <a class="item" href="/page/donationPage"><i class="recycle icon"></i>捐赠衣服</a>
+        <a class="active item"><i class="language icon"></i>论坛交流</a>
+        <a class="item" href="/page/wishPage"><i class="heart icon"></i>爱心许愿</a>
+        <a class="item" href="/page/personalPage"><i class="user secret icon"></i>个人主页</a>
+        <div class="right menu">
+            <div class="item">
+                <a class="ui button" href="/page/loginPage"><i class="paper plane outline icon"></i>退出登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment" style="min-height: 0px; ">
+
+        <div class="ui container">
+            <div class="ui large secondary inverted pointing menu">
+                <a class="toc item">
+                    <i class="sidebar icon"></i>
+                </a>
+                <a class="item" href="/page/indexPage"><i class="home icon"></i>首页</a>
+                <a class="item" href="/page/donationPage"><i class="recycle icon"></i>捐赠衣服</a>
+                <a class="active item" ><i class="language icon"></i>论坛交流</a>
+                <a class="item" href="/page/wishPage"><i class="heart icon"></i>爱心许愿</a>
+                <a class="item" href="/page/personalPage"><i class="user secret icon"></i>个人主页</a>
+                <div class="right item">
+                    <a class="ui inverted button" href="/page/loginPage"><i class="paper plane outline icon"></i>退出登录</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui vertical stripe segment" style="padding: 5em; min-height: 71vh; ">
+        <div class="ui middle aligned stackable grid container">
+            <div class="ui floating message" style="width: 100%; background: unset; line-height: 50px; ">
+                <span style="color: #6435c9; font-weight: bold; font-size: 1.3em; margin-right: 20px; ">分类</span>
+                <button class="ui tiny orange basic button" onclick="getArticleDate('0')">爱心交流</button>
+                <button class="ui tiny olive basic button" onclick="getArticleDate('1')">捐赠心得</button>
+                <button class="ui tiny yellow basic button" onclick="getArticleDate('2')">情感分享</button>
+                <button class="ui tiny green basic button" onclick="getArticleDate('3')">闲谈杂话</button>
+                <button class="ui tiny red basic button" onclick="getArticleDate('4')">活动宣传</button>
+                <button class="ui tiny teal basic button" onclick="getArticleDate('5')">其他</button>
+                <button class="ui tiny blue basic button" onclick="getArticleDate()">所有</button>
+            </div>
+            <div class="ui raised segments" style="width: 100%; ">
+                <div class="ui segment">
+                    <p>
+                        <span style="color: #6435c9; font-weight: bold; ">公共社区</span>
+                        <button class="tiny ui teal button" style="float: right; " id="release">发帖子</button>
+                    </p>
+                </div>
+                <div class="ui segment" id="view">
+
+                </div>
+                <div class="ui segment">
+                    <p>
+                        <div id="page"></div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="ui inverted vertical footer segment" style="padding: 3em 0em;">
+        <div class="ui container">
+            <div class="ui stackable inverted divided equal height stackable grid">
+                <div class="three wide column">
+                    <h4 class="ui inverted header">关于我们</h4>
+                    <div class="ui inverted link list">
+                        <a class="item">线下地址</a>
+                        <a class="item">联系我们</a>
+                        <a class="item">历届活动</a>
+                        <a class="item">商业证书</a>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">about</h4>
+                    <div class="ui inverted link list">
+                        <a class="item">address</a>
+                        <a class="item">Contact Us</a>
+                        <a class="item">Previous activities</a>
+                        <a class="item">Business certificate</a>
+                    </div>
+                </div>
+                <div class="seven wide column">
+                    <h4 class="ui inverted header">广告投放</h4>
+                    <p>
+                        如果有需要广告投放在此区域，请联系我们
+                        If you need advertising in this area, please contact us
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="listLaytpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <div class="row">
+        <div class="ui items">
+            <div class="item">
+                <div class="image">
+                    {{#  if(item.coverImg == null || item.coverImg === ''){ }}
+                        <img src="/semantic-ui/logo.png">
+                    {{# }else{ }}
+                        <img src="/forumImg/{{item.coverImg}}" style="height: 100%; ">
+                    {{# } }}
+                </div>
+                <div class="content" title="{{item.content}}">
+                    <a class="header" onclick="openDetailPage('{{item.id}}')">
+                        {{item.title}}
+                    </a>
+                    <div class="meta overThreeLineText" style="font-size: 15px; line-height: 30px; ">
+                        <span>{{item.content}}</span>
+                    </div>
+                    <div class="description">
+                        <p></p>
+                    </div>
+                    <div class="extra">
+                        {{item.userName}} {{item.createDate}}
+                    </div>
+                    <div style="text-align: right; ">
+                        {{#  if(item.kind === 0){ }}
+                        <button class="ui tiny orange basic button" style="cursor: unset; ">爱心交流</button>
+                        {{#  }else if(item.kind === 1){ }}
+                        <button class="ui tiny olive basic button" style="cursor: unset; ">捐助心得</button>
+                        {{#  }else if(item.kind === 2){ }}
+                        <button class="ui tiny yellow basic button" style="cursor: unset; ">情感分享</button>
+                        {{#  }else if(item.kind === 3){ }}
+                        <button class="ui tiny green basic button" style="cursor: unset; ">闲谈杂话</button>
+                        {{#  }else if(item.kind === 4){ }}
+                        <button class="ui tiny red basic button" style="cursor: unset; ">活动宣传</button>
+                        {{#  }else if(item.kind === 5){ }}
+                        <button class="ui tiny teal basic button" style="cursor: unset; ">其他</button>
+                        {{# } }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+    {{#  }); }}
+    {{#  if(d.length === 0){ }}
+    暂无数据
+    {{#  } }}
+</script>
+
+<script type="text/javascript">
+    layui.use(['element', 'layer', 'laytpl', 'laypage'], function(){
+        let element = layui.element
+        let layer = layui.layer
+        let laytpl = layui.laytpl
+        let laypage = layui.laypage
+        let $ = layui.$;
+
+        //过滤html标签
+        function removeHTMLTag(str) {
+            str = str.replace(/<\/?[^>]*>/g, ''); //去除HTML tag
+            str = str.replace(/[ | ]*\n/g, '\n'); //去除行尾空白
+            str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+            str = str.replace(/ /ig, ''); //去掉
+            return str;
+        }
+
+        //获取文章数据
+        getArticleDate = function(kind){
+            $.ajax({
+                type: "POST"
+                , url: '/article/getTableData'
+                , contentType: "application/json"
+                , data: JSON.stringify({'limitCount':1, 'currentPage':1, 'kind': kind})
+                , success: function (data) {
+                    laypage.render({
+                        elem: 'page'
+                        ,limit: 10
+                        ,count: data['count']
+                        //页面跳转
+                        ,jump: function(obj, first){
+                            $.ajax({
+                                type: "POST"
+                                , url: '/article/getTableData'
+                                , contentType: "application/json"
+                                , data: JSON.stringify({'limitCount':10, 'currentPage':obj.curr, 'kind': kind})
+                                , success: function (data) {
+                                    $.each(data['data'], function(index, value){
+                                        value['content'] = removeHTMLTag(value['content'])
+                                    })
+                                    let getTpl = listLaytpl.innerHTML
+                                    laytpl(getTpl).render(data['data'], function (html) {
+                                        view.innerHTML = html;
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        $(function () {
+            getArticleDate()
+        })
+
+        //弹窗关闭刷新标志
+        let refreshFlag = false
+        window['setRefreshFlag'] = function (flag){
+            refreshFlag = flag;
+        }
+
+        $('#release').click(function(){
+            layer.open({
+                type : 2,
+                content : "/page/releaseForm",
+                area : [ '1600px', '900px' ],
+                shade: [0.8, '#393D49'],
+                closeBtn: 2,
+                shadeClose: true,
+                title : false,
+                maxmin : false,
+                cancel: function(index, layero){
+                    layer.confirm('确定要关闭么? 关闭不会保留当前输入的内容', {
+                        btn: ['确定','取消']
+                    }, function(){
+                        //确认关闭
+                        layer.closeAll()
+                    });
+                    return false;
+                },
+                end: function(){
+                    if(refreshFlag === true){
+                        window.location = "/page/forumPage"
+                    }
+                }
+            })
+        })
+
+        /**
+         * 详情按钮
+         */
+        openDetailPage = function(articleId){
+            window.open("/page/detailPage?articleId=" + articleId);
+        }
+
+
+    });
+</script>
+
+</body>
+</html>

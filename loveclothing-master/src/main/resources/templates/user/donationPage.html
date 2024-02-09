@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎使用爱心捐赠系统</title>
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/semantic-ui/semantic.css">
+    <script src="/semantic-ui/semantic.js"></script>
+    <script src="/layui/layui.js"></script>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/echarts/echarts.min.js"></script>
+</head>
+<style type="text/css">
+    .hidden.menu {
+        display: none;
+    }
+
+    .masthead.segment {
+        min-height: 700px;
+        padding: 1em 0em;
+    }
+
+    .masthead .logo.item img {
+        margin-right: 1em;
+    }
+
+    .masthead .ui.menu .ui.button {
+        margin-left: 0.5em;
+    }
+
+    .masthead h1.ui.header {
+        margin-top: 3em;
+        margin-bottom: 0em;
+        font-size: 4em;
+        font-weight: normal;
+    }
+
+    .masthead h2 {
+        font-size: 1.7em;
+        font-weight: normal;
+    }
+
+    .ui.vertical.stripe {
+        padding: 8em 0em;
+    }
+
+    .ui.vertical.stripe h3 {
+        font-size: 2em;
+    }
+
+    .ui.vertical.stripe .button + h3,
+    .ui.vertical.stripe p + h3 {
+        margin-top: 3em;
+    }
+
+    .ui.vertical.stripe .floated.image {
+        clear: both;
+    }
+
+    .ui.vertical.stripe p {
+        font-size: 1.33em;
+    }
+
+    .ui.vertical.stripe .horizontal.divider {
+        margin: 3em 0em;
+    }
+
+    .quote.stripe.segment {
+        padding: 0em;
+    }
+
+    .quote.stripe.segment .grid .column {
+        padding-top: 5em;
+        padding-bottom: 5em;
+    }
+
+    .footer.segment {
+        padding: 5em 0em;
+    }
+
+    .secondary.pointing.menu .toc.item {
+        display: none;
+    }
+
+    @media only screen and (max-width: 700px) {
+        .ui.fixed.menu {
+            display: none !important;
+        }
+
+        .secondary.pointing.menu .item,
+        .secondary.pointing.menu .menu {
+            display: none;
+        }
+
+        .secondary.pointing.menu .toc.item {
+            display: block;
+        }
+
+        .masthead.segment {
+            min-height: 350px;
+        }
+
+        .masthead h1.ui.header {
+            font-size: 2em;
+            margin-top: 1.5em;
+        }
+
+        .masthead h2 {
+            margin-top: 0.5em;
+            font-size: 1.5em;
+        }
+    }
+
+    .ui.text.container {
+        font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        max-width: 100% !important;
+        line-height: 1.5;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.masthead')
+            .visibility({
+                once: false,
+                onBottomPassed: function () {
+                    $('.fixed.menu').transition('fade in');
+                },
+                onBottomPassedReverse: function () {
+                    $('.fixed.menu').transition('fade out');
+                }
+            });
+        $('.ui.sidebar')
+            .sidebar('attach events', '.toc.item');
+    });
+</script>
+
+<body class="pushable">
+
+<div class="ui large top fixed hidden menu">
+    <div class="ui container">
+        <a class="item" href="/page/indexPage"><i class="home icon"></i>首页</a>
+        <a class="active item"><i class="recycle icon"></i>捐赠衣服</a>
+        <a class="item" href="/page/forumPage"><i class="language icon"></i>论坛交流</a>
+        <a class="item" href="/page/wishPage"><i class="heart icon"></i>爱心许愿</a>
+        <a class="item" href="/page/personalPage"><i class="user secret icon"></i>个人主页</a>
+        <div class="right menu">
+            <div class="item">
+                <a class="ui button" href="/page/loginPage" ><i class="paper plane outline icon"></i>退出登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment" style="min-height: 0px; ">
+
+        <div class="ui container">
+            <div class="ui large secondary inverted pointing menu">
+                <a class="toc item">
+                    <i class="sidebar icon"></i>
+                </a>
+                <a class="item" href="/page/indexPage"><i class="home icon"></i>首页</a>
+                <a class="active item"><i class="recycle icon"></i>捐赠衣服</a>
+                <a class="item" href="/page/forumPage"><i class="language icon"></i>论坛交流</a>
+                <a class="item" href="/page/wishPage"><i class="heart icon"></i>爱心许愿</a>
+                <a class="item" href="/page/personalPage"><i class="user secret icon"></i>个人主页</a>
+                <div class="right item">
+                    <a class="ui inverted button" href="/page/loginPage"><i class="paper plane outline icon"></i>退出登录</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui text container">
+            <div class="ui inverted segment" style="margin-bottom: 0px; ">
+                <div class="ui form">
+                    <div class="inline fields">
+                        <div class="eleven wide field">
+                            <label style="color: white; ">分类</label>
+                            <select id="kindInput" multiple="" class="ui search dropdown">
+                                <option value="">请选择分类</option>
+                                <option value="0">上衣</option>
+                                <option value="1">裤子</option>
+                                <option value="2">袜子</option>
+                                <option value="3">手套</option>
+                                <option value="4">帽子</option>
+                                <option value="5">其他</option>
+                            </select>
+                        </div>
+                        <div class="four wide field" style="margin-left: 20px; ">
+                            <label style="color: white; ">数量</label>
+                            <input id="numberInput" type="text" placeholder="请输入数量">
+                        </div>
+                    </div>
+                    <div class="ui inverted divider"></div>
+                    <div class="ui form">
+                        <div class="inline fields">
+                            <div class="sixteen wide field">
+                                <label style="color: white; ">地址</label>
+                                <input id="addressInput" type="text" placeholder="请输入地址,会有工作人员上门收取您的捐赠衣物">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui inverted divider"></div>
+                </div>
+            </div>
+            <div class="ui sm inverted purple button" id="donation">捐赠 <i class="right share square outline icon"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ui vertical stripe segment" style="padding: 5em; ">
+        <div class="ui middle aligned stackable grid container">
+            <div class="ui raised segments" style="width: 65%; margin-bottom: 0px; ">
+                <div class="ui segment">
+                    <p>
+                        <span style="color: #6435c9; font-weight: bold; ">累计数据总览</span>
+                    </p>
+                </div>
+                <div class="ui segment">
+                    <div class="ui left rail">
+                        <div class="ui segment">
+                            各分类衣物累计捐赠数量占比统计
+                        </div>
+                    </div>
+                    <div id="echartsOne" style="height: 500px; "></div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui left rail">
+                        <div class="ui segment">
+                            近七日捐赠数量统计
+                        </div>
+                    </div>
+                    <div id="echartsTwo" style="height: 500px; "></div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui left rail">
+                        <div class="ui segment">
+                            回收检查情况统计
+                        </div>
+                    </div>
+                    <div id="echartsThree" style="height: 500px; "></div>
+                </div>
+            </div>
+            <div class="ui raised segments" style="width: 30%; height: 900px; margin-top: 0px; margin-left: 10px; ">
+                <div class="ui segment">
+                    <p>
+                        <span style="color: #6435c9; font-weight: bold; ">我的捐赠记录</span>
+                    </p>
+                </div>
+                <div class="ui segment">
+                    <div class="row">
+                        <div class="ui items">
+                            <div class="item">
+                                <div class="content">
+                                    <div class="ui horizontal statistics">
+                                        <div class="statistic">
+                                            <div class="value" id="total">
+                                                0
+                                            </div>
+                                            <div class="label">
+                                                累计捐赠
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui small horizontal statistics">
+                                        <div class="statistic">
+                                            <div class="value" id="0">
+                                                0
+                                            </div>
+                                            <div class="label">
+                                                上衣
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui small horizontal statistics">
+                                        <div class="statistic">
+                                            <div class="value" id="1">
+                                                0
+                                            </div>
+                                            <div class="label">
+                                                裤子
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui small horizontal statistics">
+                                        <div class="statistic">
+                                            <div class="value" id="2">
+                                                0
+                                            </div>
+                                            <div class="label">
+                                                袜子
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui small horizontal statistics">
+                                        <div class="statistic">
+                                            <div class="value" id="3">
+                                                0
+                                            </div>
+                                            <div class="label">
+                                                手套
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui small horizontal statistics">
+                                        <div class="statistic">
+                                            <div class="value" id="4">
+                                                0
+                                            </div>
+                                            <div class="label">
+                                                帽子
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui small horizontal statistics">
+                                        <div class="statistic">
+                                            <div class="value" id="5">
+                                                7
+                                            </div>
+                                            <div class="label">
+                                                其他
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <p>最新提交捐赠记录</p>
+                    <ul style="line-height: 30px; margin-top: 10px; " id="view">
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="ui inverted vertical footer segment" style="padding: 3em 0em;">
+        <div class="ui container">
+            <div class="ui stackable inverted divided equal height stackable grid">
+                <div class="three wide column">
+                    <h4 class="ui inverted header">关于我们</h4>
+                    <div class="ui inverted link list">
+                        <a class="item">线下地址</a>
+                        <a class="item">联系我们</a>
+                        <a class="item">历届活动</a>
+                        <a class="item">商业证书</a>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">about</h4>
+                    <div class="ui inverted link list">
+                        <a class="item">address</a>
+                        <a class="item">Contact Us</a>
+                        <a class="item">Previous activities</a>
+                        <a class="item">Business certificate</a>
+                    </div>
+                </div>
+                <div class="seven wide column">
+                    <h4 class="ui inverted header">广告投放</h4>
+                    <p>
+                        如果有需要广告投放在此区域，请联系我们
+                        If you need advertising in this area, please contact us
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="listLaytpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+        <li>
+            {{item.createDate}}
+            {{#  if(item.verify === 0){ }}
+                <span class="layui-badge layui-bg-blue" style="margin-right: 5px; ">等待上门检查</span>
+            {{#  }else if(item.verify === 1){ }}
+                <span class="layui-badge layui-bg-green" style="margin-right: 5px; ">已上门回收</span>
+            {{#  }else if(item.verify === 2){ }}
+                <span class="layui-badge" style="margin-right: 5px; ">上门检查不通过</span>
+            {{#  } }}
+            {{item.kindName}} +{{item.number}}
+        </li>
+    {{#  }); }}
+    {{#  if(d.length === 0){ }}
+        暂无数据
+    {{#  } }}
+</script>
+
+
+<script type="text/javascript">
+    layui.use(['element', 'layer', 'laytpl'], function () {
+        let element = layui.element
+        let layer = layui.layer
+        let laytpl = layui.laytpl
+        let $ = layui.$;
+
+        $(function(){
+            $('select.dropdown').dropdown().css('width', '100%');
+
+            $.ajax({
+                type: "GET"
+                , url: '/donation/selfDonation'
+                , contentType: "application/json"
+                , success: function (data) {
+                    $.each(data, function(index, value){
+                        $('#' + value['kind']).text(value['value'])
+                        if(value['kind'] === 'newList'){
+                            let getTpl = listLaytpl.innerHTML
+                            laytpl(getTpl).render(value['value'], function(html){
+                                view.innerHTML = html;
+                            });
+                        }
+                    })
+
+                }
+            });
+
+            let echartsOne = echarts.init(document.getElementById('echartsOne'));
+            $.ajax({
+                type: "GET"
+                , url: '/donation/echartsDataOne'
+                , contentType: "application/json"
+                , success: function (dataOne) {
+                    let optionOne = {
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left'
+                        },
+                        series: [
+                            {
+                                type: 'pie',
+                                radius: '50%',
+                                data: dataOne,
+                                emphasis: {
+                                    itemStyle: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    echartsOne.setOption(optionOne);
+                }
+            });
+
+            let echartsTwo = echarts.init(document.getElementById('echartsTwo'));
+            $.ajax({
+                type: "GET"
+                , url: '/donation/echartsDataTwo'
+                , contentType: "application/json"
+                , success: function (dataTwo) {
+                    let optionTwo = {
+                        xAxis: {
+                            type: 'category',
+                            data: dataTwo['dateList']
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            formatter: function (datas) {
+                                let res = datas[0].name + '<br/>'
+                                res=res+'捐赠数:'+datas[0].data
+                                return res
+                            }
+                        },
+                        series: [
+                            {
+                                data: dataTwo['dataList'],
+                                type: 'bar',
+                                showBackground: true,
+                                backgroundStyle: {
+                                    color: 'rgba(180, 180, 180, 0.2)'
+                                }
+                            }
+                        ]
+                    };
+                    echartsTwo.setOption(optionTwo);
+                }
+            });
+
+            let echartsThree = echarts.init(document.getElementById('echartsThree'));
+            $.ajax({
+                type: "GET"
+                , url: '/donation/echartsDataThree'
+                , contentType: "application/json"
+                , success: function (dataThree) {
+                    let optionThree = {
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['回收检查通过', '上门检查未通过', '等待上门回收检查']
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: dataThree['dateList']
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: '回收检查通过',
+                                type: 'line',
+                                stack: 'Total',
+                                data: dataThree['agreeList']
+                            },
+                            {
+                                name: '上门检查未通过',
+                                type: 'line',
+                                stack: 'Total',
+                                data: dataThree['refuseList']
+                            },
+                            {
+                                name: '等待上门回收检查',
+                                type: 'line',
+                                stack: 'Total',
+                                data: dataThree['waitList']
+                            }
+                        ]
+                    };
+                    echartsThree.setOption(optionThree);
+                }
+            });
+
+        })
+
+        //捐赠
+        $('#donation').click(function () {
+            let objArr = []
+            let kindArr = $('#kindInput').val();
+            let number = $('#numberInput').val();
+            let address = $('#addressInput').val();
+            if(kindArr.length === 0){
+                layer.msg("请选择分类")
+            }else if(number == null || number === ''){
+                layer.msg("请输入数量")
+            }else if(address == null || address === ''){
+                layer.msg("请输入联系地址")
+            }else{
+                $.each(kindArr, function(index, value){
+                    let obj = {}
+                    obj['kind'] = value;
+                    obj['number'] = number;
+                    obj['address'] = address;
+                    objArr.push(obj)
+                })
+                $.ajax({
+                    type: "POST"
+                    , url: '/donation/insertDonationList'
+                    , contentType: "application/json"
+                    , data: JSON.stringify(objArr)
+                    , success: function (data) {
+                        let dataObj = JSON.parse(data)
+                        if (dataObj["msg"] === 'success') {
+                            layer.msg("提交成功!")
+                            setTimeout(function (){
+                                window.location = '/page/donationPage'
+                            }, 1.5*1000)
+                        } else {
+                            layer.msg('系统发生错误！请联系管理员');
+                        }
+                    }
+                });
+            }
+        })
+
+    });
+</script>
+
+</body>
+</html>

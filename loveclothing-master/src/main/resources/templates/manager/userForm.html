@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+<form class="layui-form" action="" style="margin-top: 50px; ">
+    <input id="id" style="display: none; ">
+    <div class="layui-form-item" style="margin-left: 40px; ">
+        <div class="layui-inline">
+            <label class="layui-form-label">姓名<span style="color: red; ">*</span></label>
+            <div class="layui-input-inline">
+                <input type="text" id="userName" autocomplete="off" class="layui-input" placeholder="请输入姓名">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">角色<span style="color: red; ">*</span></label>
+            <div class="layui-input-inline">
+                <select id="userType" >
+                    <option value="">请选择角色</option>
+                    <option value="0">管理员</option>
+                    <option value="1">用户</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-left: 40px; ">
+        <div class="layui-inline">
+            <label class="layui-form-label">账号<span style="color: red; ">*</span></label>
+            <div class="layui-input-inline">
+                <input type="text" id="loginName" autocomplete="off" class="layui-input" placeholder="请输入账号">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">密码<span style="color: red; ">*</span></label>
+            <div class="layui-input-inline">
+                <input type="text" id="userPassword" autocomplete="off" class="layui-input" placeholder="请输入密码">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-left: 40px; ">
+        <div class="layui-inline">
+            <label class="layui-form-label">电话<span style="color: red; ">*</span></label>
+            <div class="layui-input-inline">
+                <input type="text" id="userTel" autocomplete="off" class="layui-input" placeholder="请输入电话">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="submitBtn" style="margin-left: 150px; ">保存</button>
+        </div>
+    </div>
+
+</form>
+
+<script type="text/javascript">
+    layui.use(['layer', 'form'], function(){
+        let layer = layui.layer
+        let form = layui.form;
+        let $ = layui.$;
+
+        window['formRender'] = function (){
+            form.render();
+        }
+
+        $('#submitBtn').click(function(){
+            let obj = {}
+            obj["userName"] = $('#userName').val();
+            obj["loginName"] = $('#loginName').val();
+            obj["userPassword"] = $('#userPassword').val();
+            obj["userType"] = $("#userType").val();
+            obj["userTel"] = $("#userTel").val();
+            obj["userType"] = $("#userType").val();
+            if(obj["userName"] == null || obj["userName"] === ''){
+                layer.msg("请输入姓名");
+            }else if(obj["loginName"] == null || obj["loginName"] === ''){
+                layer.msg("请输入账号");
+            }else if(obj["userPassword"] == null || obj["userPassword"] === ''){
+                layer.msg("请输入密码");
+            }else if(obj["userTel"] == null || obj["userTel"] === ''){
+                layer.msg("请输入电话");
+            }else if(obj["userType"] == null || obj["userType"] === ''){
+                layer.msg("请选择身份");
+            }else{
+                obj["id"] = $('#id').val();
+                $.ajax({
+                    type: "POST",
+                    url: '/user/saveUser',
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    success: function (data) {
+                        let dataObj = JSON.parse(data)
+                        if(dataObj["msg"] === 'success'){
+                            parent.setRefreshFlag(true)
+                            let index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }else if(dataObj["msg"] === 'loginNameRepeat'){
+                            layer.msg("该账号已被使用！")
+                        }else {
+                            layer.msg("系统发生错误，请联系管理员！")
+                        }
+                    }
+                });
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>爱心捐赠系统</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+
+
+<ul class="layui-nav " lay-bar="disabled" style="padding: 0 10px; border-radius: 0px;">
+    <li class="layui-nav-item">
+        爱心捐赠系统
+    </li>
+    <li class="layui-nav-item" style="float:right; ">
+        <a style="float: right; margin-right: 15px; " href="/page/loginPage">
+            <img src="/images/logoutLogo.jpg" class="layui-nav-img">退出登录
+        </a>
+    </li>
+</ul>
+
+
+<ul class="layui-nav layui-nav-tree layui-nav-side" id="leftMenuUl" style="margin-top: 60px; border-radius: 0px;">
+    <li class="layui-nav-item"><a href="/page/managerUser">用户管理</a></li>
+    <li class="layui-nav-item "><a href="/page/managerDonation">捐赠记录管理</a></li>
+    <li class="layui-nav-item layui-this"><a href="/page/managerForum">论坛管理</a></li>
+    <li class="layui-nav-item"><a href="/page/managerMessage">留言管理</a></li>
+    <li class="layui-nav-item"><a href="/page/managerWish">心愿管理</a></li>
+</ul>
+
+<div style="margin-left: 210px;">
+    <!-- 数据表格 -->
+    <table id="dataTable" lay-filter="dataTable"></table>
+
+</div>
+
+<!-- 行工具 --->
+<script type="text/html" id="rowToolBar">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detai">详情</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<!--  头部工具 -->
+<script type="text/html" id="headToolbar">
+    <div class="layui-btn-container" style="font-size: unset; ">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 350px; ">
+                    <input type="text" id="userName" autocomplete="off" class="layui-input" placeholder="输入发布者姓名搜索">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 350px; ">
+                    <input type="text" id="createDate" autocomplete="off" class="layui-input" placeholder="选择发布日期搜索">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 350px; ">
+                    <input type="text" id="title" autocomplete="off" class="layui-input" placeholder="输入标题搜索">
+                </div>
+            </div>
+            <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="search" style="margin-bottom: 7px; "><i
+                    class="layui-icon">&#xe615;</i>搜索
+            </button>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript" th:inline="none">
+    layui.use(['element', 'layer', 'form', 'table', 'laydate'], function(){
+        let element = layui.element
+        let layer = layui.layer
+        let form = layui.form;
+        let table = layui.table;
+        let laydate = layui.laydate;
+        let $ = layui.$;
+
+        //弹窗关闭刷新标志
+        let refreshFlag = false
+        window['setRefreshFlag'] = function (flag){
+            refreshFlag = flag;
+        }
+
+        //渲染数据表格
+        table.render({
+            elem: '#dataTable'
+            ,toolbar: '#headToolbar'
+            ,height: 'full-110'
+            ,url: '/article/getTableData'
+            ,contentType: 'application/json'
+            ,method: "POST"
+            ,page: true
+            ,limit: 20
+            ,request: {
+                pageName: 'currentPage'
+                ,limitName: 'limitCount'
+            }
+            ,cols: [[
+                {field: 'id', hide:true}
+                ,{field: 'userName', title: '发布用户', width:'10%'}
+                ,{field: 'title', title: '标题', width: '60%'}
+                ,{field: 'createDate', title: '发布时间', width:'15%', sort: true}
+                ,{fixed: 'right', title:'操作', toolbar: '#rowToolBar', width:'15%'}
+            ]]
+        });
+
+        laydate.render({
+            elem: '#createDate'
+            ,trigger: 'click'
+        });
+
+        //行工具事件
+        table.on('tool(dataTable)', function(obj){
+            let data = obj.data; //获得当前行数据
+            let layEvent = obj.event;
+            if(layEvent === 'del'){
+                //删除
+                layer.confirm('确定要删除该文章么？,删除后不可恢复!', {
+                    btn: ['确定','取消']
+                }, function(){
+                    //确认删除
+                    $.ajax({
+                        type: "POST",
+                        url: '/article/deleteArticle?id=' + data.id,
+                        contentType: "application/json",
+                        success: function (data) {
+                            let dataObj = JSON.parse(data)
+                            if(dataObj["msg"] === 'success'){
+                                layer.msg("删除成功");
+                                setTimeout(function(){
+                                    window.location = "/page/managerForum";
+                                },2*1000);
+                            }else{
+                                layer.msg("发生错误，删除失败!")
+                            }
+                        }
+                    });
+                });
+            }else if(layEvent === 'detai'){
+                window.open("/page/detailPage?articleId=" + data.id);
+            }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(dataTable)', function (obj) {
+            if (obj.event === 'search') {
+                table.reload("dataTable", {
+                    where: {
+                        "userName": $('#userName').val()
+                        ,"createDate": $('#createDate').val()
+                        ,"title": $('#title').val()
+                    },
+                    page: {
+                        curr: 1
+                    },
+                });
+                laydate.render({
+                    elem: '#createDate'
+                    ,trigger: 'click'
+                });
+            }
+        });
+
+
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎使用爱心捐赠系统</title>
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <script src="/layui/layui.js"></script>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/echarts/echarts.min.js"></script>
+</head>
+
+<body style="height: 100%; ">
+
+<form class="layui-form" action="" style="margin: 20px; ">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: fit-content; ">标题</label>
+        <div class="layui-input-block" style="margin-left: 60px; ">
+            <input type="text" id="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width: fit-content; ">内容</label>
+        <div class="layui-input-block" style="margin-left: 60px; ">
+            <textarea placeholder="请输入心愿内容" class="layui-textarea" id="content"></textarea>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 10px; ">
+        <button type="button" class="layui-btn" id="releaseBtn">发布</button>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+    layui.use(['element', 'layer'], function () {
+        let element = layui.element;
+        let layer = layui.layer;
+        let $ = layui.$;
+
+
+        //点击发布按钮
+        $('#releaseBtn').click(function(){
+            let title = $('#title').val();
+            let content = $('#content').val();
+            if(title == null || title === ''){
+                layer.msg("请输入标题")
+            }else if(content == null || content === ''){
+                layer.msg("请输入内容")
+            }else{
+                let obj = {};
+                obj['wishTitle'] = title;
+                obj['wishContent'] = content;
+                $.ajax({
+                    type: "POST",
+                    url: '/wish/saveWish',
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    success: function (data) {
+                        let dataObj = JSON.parse(data)
+                        if(dataObj["msg"] === 'success'){
+                            parent.setRefreshFlag(true)
+                            let index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }else {
+                            layer.msg("系统发生错误，请联系管理员！")
+                        }
+                    }
+                });
+            }
+        })
+
+
+
+
+
+
+
+    })
+</script>
+
+
+</body>
+</html>

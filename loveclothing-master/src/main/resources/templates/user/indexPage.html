@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎使用爱心捐赠系统</title>
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/semantic-ui/semantic.css">
+    <script src="/semantic-ui/semantic.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<style type="text/css">
+    .hidden.menu {
+        display: none;
+    }
+    .masthead.segment {
+        min-height: 700px;
+        padding: 1em 0em;
+    }
+    .masthead .logo.item img {
+        margin-right: 1em;
+    }
+    .masthead .ui.menu .ui.button {
+        margin-left: 0.5em;
+    }
+    .masthead h1.ui.header {
+        margin-top: 3em;
+        margin-bottom: 0em;
+        font-size: 4em;
+        font-weight: normal;
+    }
+    .masthead h2 {
+        font-size: 1.7em;
+        font-weight: normal;
+    }
+    .ui.vertical.stripe {
+        padding: 8em 0em;
+    }
+    .ui.vertical.stripe h3 {
+        font-size: 2em;
+    }
+    .ui.vertical.stripe .button + h3,
+    .ui.vertical.stripe p + h3 {
+        margin-top: 3em;
+    }
+    .ui.vertical.stripe .floated.image {
+        clear: both;
+    }
+    .ui.vertical.stripe p {
+        font-size: 1.33em;
+    }
+    .ui.vertical.stripe .horizontal.divider {
+        margin: 3em 0em;
+    }
+
+    .quote.stripe.segment {
+        padding: 0em;
+    }
+    .quote.stripe.segment .grid .column {
+        padding-top: 5em;
+        padding-bottom: 5em;
+    }
+
+    .footer.segment {
+        padding: 5em 0em;
+    }
+    .secondary.pointing.menu .toc.item {
+        display: none;
+    }
+    @media only screen and (max-width: 700px) {
+        .ui.fixed.menu {
+            display: none !important;
+        }
+        .secondary.pointing.menu .item,
+        .secondary.pointing.menu .menu {
+            display: none;
+        }
+        .secondary.pointing.menu .toc.item {
+            display: block;
+        }
+        .masthead.segment {
+            min-height: 350px;
+        }
+        .masthead h1.ui.header {
+            font-size: 2em;
+            margin-top: 1.5em;
+        }
+        .masthead h2 {
+            margin-top: 0.5em;
+            font-size: 1.5em;
+        }
+    }
+    .ui.text.container {
+        font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        max-width: 100% !important;
+        line-height: 1.5;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+            $('.masthead')
+                .visibility({
+                    once: false,
+                    onBottomPassed: function() {
+                        $('.fixed.menu').transition('fade in');
+                    },
+                    onBottomPassedReverse: function() {
+                        $('.fixed.menu').transition('fade out');
+                    }
+                });
+            $('.ui.sidebar')
+                .sidebar('attach events', '.toc.item');
+        });
+</script>
+
+<body class="pushable">
+
+<div class="ui large top fixed hidden menu">
+    <div class="ui container">
+        <a class="active item"><i class="home icon"></i>首页</a>
+        <a class="item" href="/page/donationPage"><i class="recycle icon"></i>捐赠衣服</a>
+        <a class="item" href="/page/forumPage"><i class="language icon"></i>论坛交流</a>
+        <a class="item" href="/page/wishPage"><i class="heart icon"></i>爱心许愿</a>
+        <a class="item" href="/page/personalPage"><i class="user secret icon"></i>个人主页</a>
+        <div class="right menu">
+            <div class="item">
+                <a class="ui button" href="/page/loginPage"><i class="paper plane outline icon"></i>退出登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment">
+
+        <div class="ui container">
+            <div class="ui large secondary inverted pointing menu">
+                <a class="toc item">
+                    <i class="sidebar icon"></i>
+                </a>
+                <a class="active item"><i class="home icon"></i>首页</a>
+                <a class="item" href="/page/donationPage"><i class="recycle icon"></i>捐赠衣服</a>
+                <a class="item" href="/page/forumPage"><i class="language icon"></i>论坛交流</a>
+                <a class="item" href="/page/wishPage"><i class="heart icon"></i>爱心许愿</a>
+                <a class="item" href="/page/personalPage"><i class="user secret icon"></i>个人主页</a>
+                <div class="right item">
+                    <a class="ui inverted button" href="/page/loginPage"><i class="paper plane outline icon"></i>退出登录</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui text container">
+            <h3 style="margin-top: 3em; ">
+                <i class="cn flag"></i><i class="ae flag"></i><i class="af flag"></i><i class="ag flag"></i>
+                <i class="ai flag"></i><i class="al flag"></i><i class="am flag"></i><i class="an flag"></i>
+                <i class="ao flag"></i><i class="ar flag"></i><i class="as flag"></i><i class="at flag"></i>
+                <i class="au flag"></i><i class="aw flag"></i><i class="ax flag"></i><i class="az flag"></i>
+                <i class="ba flag"></i><i class="bb flag"></i><i class="bd flag"></i><i class="be flag"></i>
+                <i class="bf flag"></i><i class="bg flag"></i><i class="bh flag"></i><i class="bi flag"></i>
+                <i class="bj flag"></i><i class="bm flag"></i><i class="bn flag"></i><i class="bo flag"></i>
+                <i class="br flag"></i><i class="bs flag"></i><i class="bt flag"></i><i class="bv flag"></i>
+                <i class="bw flag"></i><i class="by flag"></i><i class="bz flag"></i><i class="ca flag"></i>
+                <i class="cc flag"></i><i class="cd flag"></i><i class="cf flag"></i><i class="cg flag"></i>
+                <i class="ch flag"></i><i class="ci flag"></i><i class="ck flag"></i><i class="cl flag"></i>
+                <i class="cm flag"></i><i class="ad flag"></i><i class="co flag"></i><i class="cr flag"></i>
+                <i class="cs flag"></i><i class="cu flag"></i><i class="cv flag"></i><i class="cx flag"></i>
+                <i class="cy flag"></i><i class="cz flag"></i><i class="de flag"></i><i class="dj flag"></i>
+                <i class="dk flag"></i><i class="dm flag"></i><i class="do flag"></i><i class="dz flag"></i>
+                <i class="ec flag"></i><i class="ee flag"></i><i class="eg flag"></i><i class="eh flag"></i>
+            </h3>
+            <h1 class="ui inverted header" style="font-size: 2em; margin-top: 0px">
+                加入我们，让更多需要帮助的人获得一份帮助，让更多渴望得到帮助的人得到一份爱。让闲置不用和废旧的衣物得到充分利用，使他们感受到来自社会各界的关爱与关心。
+            </h1>
+            <h2>
+                Join us, let more people in need of help get a help, and let more people eager for help get a love.
+                Make full use of unused and waste clothes, so that they can feel the love and care from all walks of life.
+            </h2>
+            <a class="ui huge primary button" style="margin-top: 20px; " href="/page/donationPage">去捐赠衣物 <i class="right arrow icon"></i></a>
+        </div>
+
+    </div>
+
+    <div class="ui vertical stripe segment" style="padding: 5em; ">
+        <div class="ui middle aligned stackable grid container">
+            <div class="row">
+                <div class="eight wide column">
+                    <h3 class="ui header">我们的意义</h3>
+                    <p>
+                        对于灾区、农村的贫困地区、城市中的贫困户来说，物资的捐赠，不仅可以在生活和物质上感受社会的温暖和人文关怀，迅速地恢复生产，重建家园，也能使他们的心理上感受到安全和稳定，
+                        这将会比金钱方面的帮助更有意义
+                    </p>
+                    <h3 class="ui header" style="margin-top: 2em; ">Our meaning</h3>
+                    <p>
+                        For disaster areas, poor rural areas and poor households in cities, material donation can not only feel social warmth and humanistic care in life and material,
+                        quickly resume production and rebuild their homes, but also make them feel safe and stable psychologically,
+                        This will be more meaningful than money
+                    </p>
+                </div>
+                <div class="six wide right floated column">
+                    <img src="/images/indexPicOne.jpg" class="ui large bordered rounded image">
+                </div>
+            </div>
+            <div class="row">
+                <div class="center aligned column">
+                    <a class="ui huge button"><i class="chart line icon"></i>捐赠数据累计结果在捐赠页面下拉可见</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ui vertical stripe quote segment">
+        <div class="ui equal width stackable internally celled grid">
+            <div class="center aligned row">
+                <div class="column">
+                    <h3>累计帮助超过<span style="color: orange">3000+</span>家庭</h3>
+                    <p>Help more than 1000 + families in total</p>
+                </div>
+                <div class="column">
+                    <h3>
+                        累计收到超过<span style="color: orange">5000+</span>次表扬与鼓励私信
+                    </h3>
+                    <p>
+                        More than 5000 + praise and encouragement letters have been received in total
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui vertical stripe segment">
+        <div class="ui text container">
+            <h3 class="ui header">我们未来会如何发展?</h3>
+            <p>
+                未来期待着能带着这份温暖走的更远更长。将会计划与各大公益活动组织进行联合的公益活动举办。
+                将更多的活动在各地的线下开展，让更多的人关注到并加入我们
+            </p>
+            <a class="ui large button" id="goodOne"><i class="thumbs up icon"></i>给我们点赞</a>
+            <h4 class="ui horizontal header divider">
+                <a href="#">返回顶部</a>
+            </h4>
+            <h3 class="ui header">How will we develop in the future?</h3>
+            <p>
+                I look forward to going further and longer with this warmth in the future.
+                Joint public welfare activities with major public welfare organizations will be planned.
+                More activities will be carried out offline everywhere, so that more people will pay attention to and join us
+            </p>
+            <a class="ui large button" id="goodTwo"><i class="thumbs up icon"></i>Give us some praise</a>
+        </div>
+    </div>
+
+
+    <div class="ui inverted vertical footer segment" style="padding: 3em 0em;">
+        <div class="ui container">
+            <div class="ui stackable inverted divided equal height stackable grid">
+                <div class="three wide column">
+                    <h4 class="ui inverted header">关于我们</h4>
+                    <div class="ui inverted link list">
+                        <a class="item">线下地址</a>
+                        <a class="item">联系我们</a>
+                        <a class="item">历届活动</a>
+                        <a class="item">商业证书</a>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <h4 class="ui inverted header">about</h4>
+                    <div class="ui inverted link list">
+                        <a class="item">address</a>
+                        <a class="item">Contact Us</a>
+                        <a class="item">Previous activities</a>
+                        <a class="item">Business certificate</a>
+                    </div>
+                </div>
+                <div class="seven wide column">
+                    <h4 class="ui inverted header">广告投放</h4>
+                    <p>
+                        如果有需要广告投放在此区域，请联系我们
+                        If you need advertising in this area, please contact us
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    layui.use(['element', 'layer'], function(){
+        let element = layui.element
+        let layer = layui.layer
+        let $ = layui.$;
+
+        //点赞效果
+        function createDiv (x, y, text) {
+            //颜色
+            let colorArr = ['red','yellow','green','blue','orange']
+            //随机取出颜色
+            let color = colorArr[Math.floor((Math.random() * colorArr.length))]
+            //在鼠标点击处创建一个div用来显示文字
+            let newDiv = $("<div></div>")
+            newDiv.css({
+                'position':'absolute',
+                'width':'100px',
+                'height':'30px',
+                'left': x+155 + 'px',
+                'top': + y+35 +'px',
+                'text-align':'center',
+                'color':color,
+                'z-index': 999
+            })
+            newDiv.addClass('tempDiv')
+            $('.pushable').append(newDiv)
+            $('.tempDiv').html(text)
+            //动画效果
+            $('.tempDiv').animate({top:+ y-35 +'px'})
+        }
+
+        $('#goodOne').click(function(){
+            let x = $('#goodOne').offset().left
+            let y = $('#goodOne').offset().top
+            createDiv(x, y, '点赞+1')
+            $('.tempDiv').delay(600).hide(0)
+        })
+
+        $('#goodTwo').click(function(){
+            let x = $('#goodTwo').offset().left
+            let y = $('#goodTwo').offset().top
+            createDiv(x, y, 'thumbs-up +1')
+            $('.tempDiv').delay(600).hide(0)
+        })
+
+
+    });
+</script>
+
+</body>
+</html>

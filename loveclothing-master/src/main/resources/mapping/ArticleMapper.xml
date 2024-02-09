@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lc.dao.ArticleDao">
+
+    <sql id="commonColumns">
+        a.id,
+        a.userId,
+        a.title,
+        a.content,
+        a.kind,
+        a.picStr,
+        a.createBy,
+        a.createDate,
+        a.updateBy,
+        a.updateDate,
+        b.userName,
+        b.userImg
+    </sql>
+
+    <sql id="commonJoins">
+        left join `user` b on a.userId = b.id
+    </sql>
+
+    <insert id="insert" parameterType="com.lc.entity.Article">
+        insert into `article`
+        (id, userId, `title`, content, kind, picStr,
+         createBy, createDate, updateBy, updateDate)
+        values (#{id}, #{userId}, #{title}, #{content}, #{kind}, #{picStr},
+                #{createBy}, #{createDate}, #{updateBy}, #{updateDate})
+    </insert>
+
+    <delete id="deletePhysical" parameterType="java.lang.String">
+        delete
+        from `article`
+        where id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.lc.entity.Article">
+        update `article`
+        <set>
+            <if test="userId != null and userId != '' ">
+                userId = #{userId},
+            </if>
+            <if test="title != null and title != '' ">
+                `title` = #{title},
+            </if>
+            <if test="content != null and content != '' ">
+                content = #{content},
+            </if>
+            <if test="kind != null ">
+                `kind` = #{kind},
+            </if>
+            <if test="picStr != null and picStr != ''">
+                picStr = #{picStr},
+            </if>
+            <if test="createBy != null and createBy != '' ">
+                createBy = #{createBy},
+            </if>
+            <if test="createDate != null and createDate != '' ">
+                createDate = #{createDate},
+            </if>
+            <if test="updateBy != null and updateBy != '' ">
+                updateBy = #{updateBy},
+            </if>
+            <if test="updateDate != null and updateDate != '' ">
+                updateDate = #{updateDate},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectAllList" resultType="com.lc.entity.Article">
+        select
+        <include refid="commonColumns"/>
+        from `article` a
+        <include refid="commonJoins"/>
+    </select>
+
+    <select id="selectList" parameterType="com.lc.entity.Article" resultType="com.lc.entity.Article">
+        select
+        <include refid="commonColumns"/>
+        from `article` a
+        <include refid="commonJoins"/>
+        <where>
+            <if test="userName != null and userName != ''">
+                and b.userName like concat('%',#{userName},'%')
+            </if>
+            <if test="userId != null and userId != ''">
+                and a.userId = #{userId}
+            </if>
+            <if test="title != null and title != ''">
+                and a.title like concat('%', #{title},'%')
+            </if>
+            <if test="createDate != null and createDate != ''">
+                and a.createDate like concat(#{createDate}, '%')
+            </if>
+            <if test="kind != null">
+                and a.kind = #{kind}
+            </if>
+        </where>
+        order by a.createDate desc
+        <if test="currentPage != null and currentPage != '' and limitCount != null and limitCount != ''">
+            <bind name="startIndex" value="(currentPage-1)*limitCount"></bind>
+            limit #{startIndex},#{limitCount}
+        </if>
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*)
+        from `article` a
+        <include refid="commonJoins"/>
+    </select>
+
+    <select id="selectCount" parameterType="com.lc.entity.Article" resultType="java.lang.Integer">
+        select count(*)
+        from `article` a
+        <include refid="commonJoins"/>
+        <where>
+            <if test="userName != null and userName != ''">
+                and b.userName like concat('%',#{userName},'%')
+            </if>
+            <if test="userId != null and userId != ''">
+                and a.userId = #{userId}
+            </if>
+            <if test="title != null and title != ''">
+                and a.title like concat('%', #{title},'%')
+            </if>
+            <if test="createDate != null and createDate != ''">
+                and a.createDate like concat(#{createDate}, '%')
+            </if>
+            <if test="kind != null">
+                and a.kind = #{kind}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEntity" resultType="com.lc.entity.Article" parameterType="java.lang.String">
+        select
+        <include refid="commonColumns"/>
+        from `article` a
+        <include refid="commonJoins"/>
+        where a.id = #{id}
+    </select>
+
+    <delete id="deleteByUserId" parameterType="java.lang.String">
+        delete
+        from `article`
+        where userId = #{userId}
+    </delete>
+
+    <select id="selectByUserId" resultType="com.lc.entity.Article" parameterType="java.lang.String">
+        select
+        <include refid="commonColumns"/>
+        from `article` a
+        <include refid="commonJoins"/>
+        where a.userId = #{userId}
+        order by a.createDate desc
+    </select>
+
+</mapper>

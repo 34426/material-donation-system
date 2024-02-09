@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎使用爱心捐赠系统</title>
+    <script src="/jquery/jquery-3.6.0.js"></script>
+    <script src="/layui/layui.js"></script>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/echarts/echarts.min.js"></script>
+    <link rel="stylesheet" href="/semantic-ui/semantic.css">
+    <script src="/semantic-ui/semantic.js"></script>
+    <style type="text/css">
+
+        body {
+            background-color: #FFFFFF;
+        }
+
+        .main.container {
+            margin-top: 2em;
+        }
+
+        .main.menu {
+            margin-top: 4em;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            transition: box-shadow 0.5s ease,
+            padding 0.5s ease;
+        }
+
+        .main.menu .item img.logo {
+            margin-right: 1.5em;
+        }
+
+        .overlay {
+            float: left;
+            margin: 0em 3em 1em 0em;
+        }
+
+        .overlay .menu {
+            position: relative;
+            left: 0;
+            transition: left 0.5s ease;
+        }
+
+        .main.menu.fixed {
+            background-color: #FFFFFF;
+            border: 1px solid #DDD;
+            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .overlay.fixed .menu {
+            left: 800px;
+        }
+
+        .text.container .left.floated.image {
+            margin: 2em 2em 2em -4em;
+        }
+
+        .text.container .right.floated.image {
+            margin: 2em -4em 2em 2em;
+        }
+
+        .ui.footer.segment {
+            margin: 5em 0em 0em;
+            padding: 5em 0em;
+        }
+    </style>
+    <script>
+        $(document)
+            .ready(function () {
+
+                // fix main menu to page on passing
+                $('.main.menu').visibility({
+                    type: 'fixed'
+                });
+                $('.overlay').visibility({
+                    type: 'fixed',
+                    offset: 80
+                });
+
+                $('.image').visibility({
+                    type: 'image',
+                    transition: 'vertical flip in',
+                    duration: 500
+                });
+
+                $('.main.menu  .ui.dropdown').dropdown({
+                    on: 'hover'
+                });
+            })
+        ;
+    </script>
+</head>
+
+<body style="height: fit-content; ">
+
+<div class="ui main text container">
+    <h1 class="ui header" id="titleDetail"></h1>
+    <p id="otherDetail"></p>
+</div>
+
+
+<div class="ui borderless main menu" style="">
+    <div class="ui text container">
+        <div class="header item userImgDiv">
+            <img class="logo userImg" src="">
+
+        </div>
+        <a class="item toPersonalPage">进入他的主页</a>
+    </div>
+</div>
+<div class="ui borderless main menu placeholder" style="display: none;">
+    <div class="ui text container">
+        <div class="header item userImgDiv">
+            <img class="logo userImg" src="">
+
+        </div>
+        <a class="item toPersonalPage">进入他的主页</a>
+        <a  class="ui right floated dropdown item" tabindex="0">
+            Dropdown <i class="dropdown icon"></i>
+            <div class="menu" tabindex="-1">
+                <div class="item">Link Item</div>
+                <div class="item">Link Item</div>
+                <div class="divider"></div>
+                <div class="header">Header Item</div>
+                <div class="item">
+                    <i class="dropdown icon"></i>
+                    Sub Menu
+                    <div class="menu">
+                        <div class="item">Link Item</div>
+                        <div class="item">Link Item</div>
+                    </div>
+                </div>
+                <div class="item">Link Item</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="ui text container" id="contentDetail" style="min-height: 42.5vh; ">
+</div>
+
+<h4 class="ui horizontal divider header">
+    <i class="tags icon"></i>
+    留言
+</h4>
+
+<div class="ui text container" id="messageDetail">
+    <div class="ui comments" id="view">
+
+    </div>
+    <div class="ui comments">
+        <form class="ui reply form">
+            <div class="field">
+                <textarea id="messageContentInput"></textarea>
+            </div>
+            <div class="ui blue labeled submit icon button" id="addMessage">
+                <i class="icon edit" ></i> 留言
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="ui inverted vertical footer segment" style="padding: 3em 0em;  ">
+    <div class="ui container">
+        <div class="ui stackable inverted divided equal height stackable grid">
+            <div class="three wide column">
+                <h4 class="ui inverted header">关于我们</h4>
+                <div class="ui inverted link list">
+                    <a class="item">线下地址</a>
+                    <a class="item">联系我们</a>
+                    <a class="item">历届活动</a>
+                    <a class="item">商业证书</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">about</h4>
+                <div class="ui inverted link list">
+                    <a class="item">address</a>
+                    <a class="item">Contact Us</a>
+                    <a class="item">Previous activities</a>
+                    <a class="item">Business certificate</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header">广告投放</h4>
+                <p>
+                    如果有需要广告投放在此区域，请联系我们
+                    If you need advertising in this area, please contact us
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="listLaytpl" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+    <div class="comment">
+        <a class="avatar">
+            <img src="/userImg/{{item.userImg}}">
+        </a>
+        <div class="content">
+            <span class="author">{{item.userName}}</span>
+            <div class="metadata">
+                <span class="date">{{item.createDate}}</span>
+            </div>
+            <div class="text">
+                {{item.messageContent}}
+            </div>
+        </div>
+    </div>
+    {{#  }); }}
+</script>
+
+<script type="text/javascript">
+    layui.use(['element', 'layer', 'laytpl'], function () {
+        let element = layui.element;
+        let layer = layui.layer;
+        let laytpl = layui.laytpl
+        let $ = layui.$;
+
+        //获取url中的参数
+        function getUrlParam(name) {
+            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            let r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]);
+            return null; //返回参数值
+        }
+
+        function getMessageDate(){
+            let articleId = getUrlParam('articleId');
+            //留言信息获取
+            $.ajax({
+                type: "GET"
+                , async: false
+                , url: '/message/getByArticleId?articleId=' + articleId
+                , contentType: "application/json"
+                , success: function (data) {
+                    let getTpl = listLaytpl.innerHTML
+                    laytpl(getTpl).render(data, function (html) {
+                        view.innerHTML = html;
+                    });
+                }
+            });
+        }
+
+
+        $(function () {
+            let articleId = getUrlParam('articleId');
+            //文章内容获取
+            $.ajax({
+                type: "GET"
+                , async: false
+                , url: '/article/getById?id=' + articleId
+                , contentType: "application/json"
+                , success: function (data) {
+                    $('#titleDetail').text(data['title'])
+                    $('#otherDetail').append(data['createDate'])
+                    $('.userImg').attr('src', '/userImg/' + data['userImg'])
+                    $('.userImgDiv').append(data['userName'])
+                    $('#contentDetail').append(data['content'])
+                    $('#contentDetail').append('<div style="margin-top: 10px; ">')
+                    $.each(data['picList'], function(index, value){
+                        $('#contentDetail').append("<img style='width: 200px; height: 150px; margin-right: 10px; ' src='/forumImg/" + value +"'/>")
+                    })
+                    $('#contentDetail').append('</div>')
+                }
+            });
+            getMessageDate()
+        })
+
+        $('#addMessage').click(function () {
+            let obj = {};
+            obj['messageContent'] = $('#messageContentInput').val();
+            obj['articleId'] = getUrlParam('articleId');
+            $.ajax({
+                type: "POST"
+                , url: '/message/saveMessage'
+                , data: JSON.stringify(obj)
+                , contentType: "application/json"
+                , success: function (data) {
+                    let dataObj = JSON.parse(data)
+                    if(dataObj["msg"] === 'success'){
+                        layer.msg("留言成功")
+                        setTimeout(function(){
+                            getMessageDate()
+                            $('#messageContentInput').val('')
+                        }, 1.5*1000)
+                    }else {
+                        layer.msg("系统发生错误，请联系管理员！")
+                    }
+                }
+            });
+        })
+
+        $('.toPersonalPage').click(function(){
+            let articleId = getUrlParam('articleId');
+            $.ajax({
+                type: "GET"
+                , async: false
+                , url: '/article/getById?id=' + articleId
+                , contentType: "application/json"
+                , success: function (data) {
+                    window.open('/page/personalPage?userId=' + data['userId'])
+                }
+            });
+
+        })
+
+    })
+</script>
+
+
+</body>
+</html>
